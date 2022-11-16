@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="description"
+		content="You can compare Ghibli movies with an English version and the original one in Japanese.">
+	<meta name="keywords" content="Ghibli movies comparison">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Ghibli Movie</title>
+	<!-- font awesome-->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+	<!-- google fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Poppins:wght@300;400;700&display=swap"
+		rel="stylesheet">
+	<!-- external CSS link -->
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+	<!----------------------------------------------------------
+	This text is always hidden to manage language.
+		show-language : En (default)
+		show-language : Ja (If a user clicks "Japanese", show-language will be Ja.)
+	-->
+	<input type="text" class="hidden" id="display-language" value="En">
+	<!---------------------------------------------------------->
+
+
+	<header>
+		<div class="headButton">
+			<button class="langChangeButton cursor" id="langChangeToEN">
+				<span class="en showEn">English</span>
+				<span class="ja showJa hidden" lang="ja">英語</span>
+			</button>
+			<button class="langChangeButton cursor" id="langChangeToJP">
+				<span class="en showEn">Japanese</span>
+				<span class="ja showJa hidden" lang="ja">日本語</span>
+			</button>
+		</div>
+		<h1>Ghibli Movie</h1>
+
+		<p class="textShadow en showEn">You can compare the Ghibli Movie English version and the original(Japanese) one.
+		</p>
+		<p class="textShadow ja showJa hidden" lang="ja">おなじみのジブリ映画は北米版ではどのように紹介されているでしょうか。ちょっと見てみましょう。</p>
+		<div class="searchSec">
+			<input type="text" id="search" name="" value="" autocomplete="off" placeholder="Enter the movie name">
+			<button type="button">
+				<i class="fa-solid fa-magnifying-glass cursor" id="searchBtn"></i>
+			</button>
+		</div>
+	</header>
+
+	<h4 class="errorMsg hidden" id="errorMsg">Error</h4>
+	<main class="hidden">
+		<div id="container">
+			<section id="movieInfo">
+				<div class="row">
+					<h2 class="title italic" id="title_En"></h2>
+					<span class="italic" id="release"></span>
+				</div>
+				<h2 class="title textShadow ja" id="title_Ja" lang="ja"></h2>
+				<h3 id="genres"></h3>
+				<h3>User Score : <span id="userScore"></span></h3>
+				<h3>Director : <span id="director"></span></h3>
+			</section>
+			<div class="poster" id="posterSec_En">
+				<img class="poster" id="poster_En" src="" alt="English ver Poster">
+			</div>
+			<div class="descriptionSec" id="descriptionSec_En">
+				<div class="column">
+					<h3 class="tagline" id="tagline_En"></h3>
+					<p class="description" id="description_En"></p>
+				</div>
+			</div>
+			<div class="descriptionSec" id="descriptionSec_Ja" lang="ja">
+				<div class="column">
+					<h3 class="tagline ja" id="tagline_Ja" lang="ja"></h3>
+					<p class="description ja" id="description_Ja" lang="ja"></p>
+				</div>
+			</div>
+			<div class="poster" id="posterSec_Ja">
+				<img class="poster" id="poster_Ja" src="" alt="">
+			</div>
+		</div>
+	</main>
+
+	<footer class="hidden column">
+		<div class="row center" id="TMDBlogo">
+			<a href="https://www.themoviedb.org/" target="_blank">
+				<img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
+					alt="TMDB logo"></a>
+			<p>This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+		</div>
+		<div class="row center">
+			<h4>&copy; <span>2022</span> Mai Ogiso</h4>
+			<a href="https://twitter.com/everyday_gday25" target="_blank">
+				<i class="footerIcon fa-brands fa-twitter"></i></a>
+			<a href="https://github.com/mai-ogiso" target="_blank"><i class="footerIcon fa-brands fa-github"></i></a>
+		</div>
+	</footer>
+
+
+	<script type="text/javascript" src="config.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+</body>
+
+</html>
