@@ -3,8 +3,7 @@
 Do you love Ghibli movies?  
 In this app, you can compare the English version with the original (Japanese) one.
 
-[Ghibli_Movie_Short.webm](https://user-images.githubusercontent.com/95740190/202062532-6c75efde-77f1-4852-9ce0-969f099329d7.webm)
-
+[Ghibli Movie.webm](https://user-images.githubusercontent.com/95740190/202869704-7c387acd-09ee-4424-b1d3-f0fff3a90a18.webm)
 
 ## How It's Made:
 
