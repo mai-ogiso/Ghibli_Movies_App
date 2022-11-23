@@ -13,7 +13,10 @@ In this app, you can compare the English version with the original (Japanese) on
 ## Optimizations
 
 I suppose for those who are big fans of Ghibli movies and want to learn English or Japanese, this app may be a good option for learning a language.
-Like: "spirit away" in English --> "神隠し" in Japanese
+  
+Like:  
+"spirit away" in English --> "神隠し" in Japanese  
+"princess" in English --> "姫" in Japanese  
 
 When I improve this app, I would add a dictionary function that can compare/translate English with Japanese.
   
