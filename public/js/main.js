@@ -429,12 +429,3 @@ const langChangeToEN = document.querySelector('#langChangeToEN')
 langChangeToEN.addEventListener('click', () => {
   changeLang('En');
 });
-
-// Run Function
-const fetchBtn = document.querySelector('#fetchButton')
-const responseText = document.querySelector('#responseOutput')
-fetchBtn.addEventListener('click', async () => {
-  const response = await fetch('/.netlify/functions/hello-world')
-    .then(response => response.json())
-  responseText.innerText = JSON.stringify(response)
-})
