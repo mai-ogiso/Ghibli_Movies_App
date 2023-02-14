@@ -1,20 +1,21 @@
 /* --------------------------------------------------
------------------------WARNING-----------------------
+-----------------------INSTRUCTION-----------------------
 -----------------------------------------------------
 
-If you'd like to use this system, you need to get a TMDB API key.
-1)  You have to create an account.
-    TMDB is here.
-    https://www.themoviedb.org/
-2)  You should change code which is comment outed and paste your API key.
-    Line  17
-    const TMDB_API_key = (your api key)
-    Note) I (the creater) set my own API key on the config.js
-    It should not be added to GitHub.
+If you wish to use this app, you will need to obtain a TMDB API key. 
+To do so, follow these steps:
+
+1) Create an account on TMDB at https://www.themoviedb.org/.
+2) Replace the commented code on line 17 with your API key, like so:
+   const TMDB_API_key = (your api key).
+
+*Please note that the creator has set their own API key as an environment variable in Netlify and it is stored there.
+ Thank you.
 */
 
 // Declaration
 // const TMDB_API_key = (your api key) 
+const TMDB_API_key = null
 const TMDB_URL_ROOT = "https://api.themoviedb.org/3/"
 
 // I don't know how to use these variable as local variables instead of global ones
@@ -72,14 +73,32 @@ class Movie {
 }
 
 /* --------------------------------------------------
+Get API key stored as an environment variable in Netlify
+-----------------------------------------------------*/
+async function getApiKey() {
+  let apiKey = TMDB_API_key || null;
+  if (!apiKey) {
+    apiKey = await fetchApiKey();
+  }
+  return apiKey;
+}
+
+async function fetchApiKey() {
+  const response = await fetch('/.netlify/functions/get-api');
+  const data = await response.json();
+  return data.apiKey;
+}
+
+/* --------------------------------------------------
 -------------------- Process 1 ----------------------
 -----------------------------------------------------*/
 // Search Ghibli Movie's Title by its name (both English title and Japanese title)
-function getTitle(langSearchKey) {
+async function getTitle(langSearchKey, apiKey) {
   const userChoice_El = document.querySelector('#search')
   const GENRES_ANIME_ID = 16 // Animation is 16
   const TMDB_URL = `${TMDB_URL_ROOT}search/movie?api_key=`
-  const TMDB_SEARCH_URL = `${TMDB_URL}${TMDB_API_key}&language=${langSearchKey}&query=${encodeURI(userChoice_El.value)}`
+  // const TMDB_SEARCH_URL = `${TMDB_URL}${apiKey}&language=${langSearchKey}&query=${encodeURI(userChoice_El.value)}`
+  const TMDB_SEARCH_URL = `${TMDB_URL}${apiKey}&language=${langSearchKey}&query=${encodeURI(userChoice_El.value)}`
   return fetch(TMDB_SEARCH_URL)
     .then(res => res.json()) // parse response as JSON
     .then(data => {
@@ -87,18 +106,17 @@ function getTitle(langSearchKey) {
       // CandidatedMovie will be original_language === "ja" and genre_ids include 16 (Animation)
       const candidatedMovie = data.results.filter(item => item.original_language === "ja" && item.genre_ids.includes(GENRES_ANIME_ID));
       return candidatedMovie;
-    })
+    });
 }
 
 /* --------------------------------------------------
 -------------------- Process 2 ----------------------
 -----------------------------------------------------*/
 // Search candidated movies from TMDB and find whether its production_companies' ID includes Ghibli ID or not.
-function searchCandidatedMovie(candidatedMovie, langSearchKey) {
+function searchCandidatedMovie(candidatedMovie, langSearchKey, apiKey) {
   const GHIBLI_ID = "10342" // Ghibli ID
   const TOPCRAFT_ID = "29" //"Nausicaa of the Valley of the Wind" was made by TopCraft instead of Ghibli.
-
-  const TMDB_SEARCH_BY_ID_URL = `${TMDB_URL_ROOT}movie/${candidatedMovie.id}?api_key=${TMDB_API_key}&language=${langSearchKey}`
+  const TMDB_SEARCH_BY_ID_URL = `${TMDB_URL_ROOT}movie/${candidatedMovie.id}?api_key=${apiKey}&language=${langSearchKey}`
   return fetch(TMDB_SEARCH_BY_ID_URL)
     .then(res => res.json())
     .then(data => {
@@ -122,65 +140,128 @@ function searchCandidatedMovie(candidatedMovie, langSearchKey) {
 /* --------------------------------------------------
 -------------------- Process 3-1 ----------------------
 -----------------------------------------------------*/
-function checkMoovieNum(langSearchKey) {
-  const errorMsg_El = document.querySelector('#errorMsg');
-  const main_El = document.querySelector('main');
-  const footer_El = document.querySelector('footer');
-  let errorMsg = "";
+// function checkMoovieNum(langSearchKey, apiKey) {
+//   const errorMsg_El = document.querySelector('#errorMsg');
+//   const main_El = document.querySelector('main');
+//   const footer_El = document.querySelector('footer');
+//   let errorMsg = "";
 
-  switch (langSearchKey) {
-    case "en-US":
-      if (movieObjArr.length == 0) {
-        errorMsg = "I can't find any movies."
-        errorMsg_El.innerText = errorMsg;
-        errorMsg_El.classList.remove('hidden');
-        main_El.classList.add("hidden");
-        footer_El.classList.add("hidden");
-      } else if (movieObjArr.length > 1) {
-        errorMsg = `I found ${movieObjArr.length} movies.
+//   switch (langSearchKey) {
+//     case "en-US":
+//       if (movieObjArr.length == 0) {
+//         errorMsg = "I can't find any movies."
+//         errorMsg_El.innerText = errorMsg;
+//         errorMsg_El.classList.remove('hidden');
+//         main_El.classList.add("hidden");
+//         footer_El.classList.add("hidden");
+//       } else if (movieObjArr.length > 1) {
+//         errorMsg = `I found ${movieObjArr.length} movies.
+// ${movieObjArr.map(item => item.title)}
+// Which movie are you looking for?`
+//         errorMsg_El.innerText = errorMsg;
+//         errorMsg_El.classList.remove('hidden')
+//         main_El.classList.add("hidden");
+//         footer_El.classList.add("hidden");
+//       } else {
+//         // Search Japanese ver. Both English ver and Japanese one have the same ID.
+//         errorMsg_El.innerText = errorMsg;
+//         errorMsg_El.classList.add('hidden');
+//         getAnotherVerMovie(langSearchKey, apiKey)
+//       }
+//       break;
+
+//     case "ja":
+//       if (movieObjArr.length == 0) {
+//         errorMsg = "該当する映画がありません。"
+//         errorMsg_El.innerText = errorMsg;
+//         errorMsg_El.classList.remove('hidden')
+//         main_El.classList.add("hidden");
+//         footer_El.classList.add("hidden");
+//       } else if (movieObjArr.length > 1) {
+//         errorMsg = `${movieObjArr.length} 件の映画が該当しました。
+//       ${movieObjArr.map(item => item.original_title)} です。
+// 再度検索をお試しください。`
+//         errorMsg_El.innerText = errorMsg;
+//         errorMsg_El.classList.remove('hidden')
+//         main_El.classList.add("hidden");
+//         footer_El.classList.add("hidden");
+//       } else {
+//         // Search English ver. Both English ver and Japanese one have the same ID.
+//         errorMsg_El.innerText = errorMsg;
+//         errorMsg_El.classList.add('hidden');
+//         getAnotherVerMovie(langSearchKey, apiKey)
+//       }
+//       break;
+//   }
+// }
+
+async function checkMovieNum(langSearchKey, apiKey) {
+  return new Promise((resolve, reject) => {
+    const errorMsg_El = document.querySelector('#errorMsg');
+    const main_El = document.querySelector('main');
+    const footer_El = document.querySelector('footer');
+    let errorMsg = "";
+
+    switch (langSearchKey) {
+      case "en-US":
+        if (movieObjArr.length == 0) {
+          errorMsg = "I can't find any movies."
+          errorMsg_El.innerText = errorMsg;
+          errorMsg_El.classList.remove('hidden');
+          main_El.classList.add("hidden");
+          footer_El.classList.add("hidden");
+          reject();
+        } else if (movieObjArr.length > 1) {
+          errorMsg = `I found ${movieObjArr.length} movies.
 ${movieObjArr.map(item => item.title)}
 Which movie are you looking for?`
-        errorMsg_El.innerText = errorMsg;
-        errorMsg_El.classList.remove('hidden')
-        main_El.classList.add("hidden");
-        footer_El.classList.add("hidden");
-      } else {
-        // Search Japanese ver. Both English ver and Japanese one have the same ID.
-        errorMsg_El.innerText = errorMsg;
-        errorMsg_El.classList.add('hidden');
-        getAnotherVerMovie(langSearchKey)
-      }
-      break;
-
-    case "ja":
-      if (movieObjArr.length == 0) {
-        errorMsg = "該当する映画がありません。"
-        errorMsg_El.innerText = errorMsg;
-        errorMsg_El.classList.remove('hidden')
-        main_El.classList.add("hidden");
-        footer_El.classList.add("hidden");
-      } else if (movieObjArr.length > 1) {
-        errorMsg = `${movieObjArr.length} 件の映画が該当しました。
-      ${movieObjArr.map(item => item.original_title)} です。
-再度検索をお試しください。`
-        errorMsg_El.innerText = errorMsg;
-        errorMsg_El.classList.remove('hidden')
-        main_El.classList.add("hidden");
-        footer_El.classList.add("hidden");
-      } else {
-        // Search English ver. Both English ver and Japanese one have the same ID.
-        errorMsg_El.innerText = errorMsg;
-        errorMsg_El.classList.add('hidden');
-        getAnotherVerMovie(langSearchKey)
-      }
-      break;
-  }
+          errorMsg_El.innerText = errorMsg;
+          errorMsg_El.classList.remove('hidden')
+          main_El.classList.add("hidden");
+          footer_El.classList.add("hidden");
+          reject();
+        } else {
+          // Search Japanese ver. Both English ver and Japanese one have the same ID.
+          errorMsg_El.innerText = errorMsg;
+          errorMsg_El.classList.add('hidden');
+          getAnotherVerMovie(langSearchKey, apiKey)
+          resolve();
+        }
+        break;
+  
+      case "ja":
+        if (movieObjArr.length == 0) {
+          errorMsg = "該当する映画がありません。"
+          errorMsg_El.innerText = errorMsg;
+          errorMsg_El.classList.remove('hidden')
+          main_El.classList.add("hidden");
+          footer_El.classList.add("hidden");
+          reject();
+        } else if (movieObjArr.length > 1) {
+          errorMsg = `${movieObjArr.length} 件の映画が該当しました。
+        ${movieObjArr.map(item => item.original_title)} です。
+  再度検索をお試しください。`
+          errorMsg_El.innerText = errorMsg;
+          errorMsg_El.classList.remove('hidden')
+          main_El.classList.add("hidden");
+          footer_El.classList.add("hidden");
+          reject();
+        } else {
+          // Search English ver. Both English ver and Japanese one have the same ID.
+          errorMsg_El.innerText = errorMsg;
+          errorMsg_El.classList.add('hidden');
+          getAnotherVerMovie(langSearchKey, apiKey)
+          resolve();
+        }
+        break;
+    }
+  });
 }
 
 /* --------------------------------------------------
 -------------------- Process 3-2 ----------------------
 -----------------------------------------------------*/
-async function getAnotherVerMovie(langSearchKey) {
+async function getAnotherVerMovie(langSearchKey, apiKey) {
 
   switch (langSearchKey) {
     case "en-US":
@@ -192,7 +273,7 @@ async function getAnotherVerMovie(langSearchKey) {
   }
 
   const candidatedMovie = Object.assign({}, JSON.parse(JSON.stringify(movieObjArr[0])));
-  await Promise.all([searchCandidatedMovie(candidatedMovie, langSearchKey), getConfig(), getDirector(candidatedMovie)]);
+  await Promise.all([searchCandidatedMovie(candidatedMovie, langSearchKey, apiKey), getConfig(apiKey), getDirector(candidatedMovie, apiKey)]);
   setMovieData()
   showMain()
 }
@@ -200,9 +281,9 @@ async function getAnotherVerMovie(langSearchKey) {
 /* --------------------------------------------------
 -------------------- Process 3-3 ----------------------
 -----------------------------------------------------*/
-function getConfig() {
+function getConfig(apiKey) {
   //get config
-  const TMDB_SEARCH_CONFIG_URL = `${TMDB_URL_ROOT}configuration?api_key=${TMDB_API_key}`
+  const TMDB_SEARCH_CONFIG_URL = `${TMDB_URL_ROOT}configuration?api_key=${apiKey}`
   return fetch(TMDB_SEARCH_CONFIG_URL)
     .then(res => res.json())
     .then(data => {
@@ -214,9 +295,9 @@ function getConfig() {
 /* --------------------------------------------------
 -------------------- Process 3-4 ----------------------
 -----------------------------------------------------*/
-function getDirector(candidatedMovie) {
+function getDirector(candidatedMovie, apiKey) {
   // get director
-  const TMDB_SEARCH_BY_ID_URL = `${TMDB_URL_ROOT}movie/${candidatedMovie.id}/credits?api_key=${TMDB_API_key}`
+  const TMDB_SEARCH_BY_ID_URL = `${TMDB_URL_ROOT}movie/${candidatedMovie.id}/credits?api_key=${apiKey}`
   return fetch(TMDB_SEARCH_BY_ID_URL)
     .then(res => res.json()) // parse response as JSON
     .then(data => {
@@ -257,6 +338,9 @@ function showMain() {
 -----------------------------------------------------*/
 async function getMovie() {
 
+  // get API Key
+  let apiKey = await getApiKey();
+
   movieObjArr = []
   let movieObj = {};
   let langSearchKey = ""
@@ -273,10 +357,15 @@ async function getMovie() {
     }
   }
 
-  const candidatedMovie = await getTitle(langSearchKey);
-  const promises = candidatedMovie.map((item) => searchCandidatedMovie(item, langSearchKey));
-  await Promise.all(promises);
-  await checkMoovieNum(langSearchKey);
+  try {
+    const candidatedMovie = await getTitle(langSearchKey, apiKey);
+    const promises = candidatedMovie.map((item) => searchCandidatedMovie(item, langSearchKey, apiKey ));
+    await Promise.all(promises);
+    await checkMovieNum(langSearchKey, apiKey);
+  } catch (error) {
+    console.error(error);
+  }
+  
 
 }
 
@@ -311,19 +400,11 @@ function changeLang(language) {
   }
 
   const Items = document.querySelectorAll(AddClassItems);
-
-  // Items.forEach(function (item) {
-  //   item.classList.add('hidden');
-  // });
-
   Items.forEach(item =>
     item.classList.add('hidden')
   );
 
   const RemoveItems = document.querySelectorAll(RemoveClassItems);
-  // RemoveItems.forEach(function (item) {
-  //   item.classList.remove('hidden');
-  // });
   RemoveItems.forEach(item =>
     item.classList.remove('hidden')
   );
@@ -339,12 +420,12 @@ searchBtn.addEventListener('click', getMovie)
 
 //Run Function
 const langChangeToJP = document.querySelector('#langChangeToJP')
-langChangeToJP.addEventListener('click', function (e) {
+langChangeToJP.addEventListener('click', () => {
   changeLang('Ja');
 });
 
 //Run Function
 const langChangeToEN = document.querySelector('#langChangeToEN')
-langChangeToEN.addEventListener('click', function (e) {
+langChangeToEN.addEventListener('click', () => {
   changeLang('En');
 });
