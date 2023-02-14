@@ -8,7 +8,7 @@ In this app, you can compare the English version with the original (Japanese) on
 
 ## How It's Made:
 
-**Tech used:** HTML, CSS, JavaScript(vanilla)
+**Tech used:** HTML, CSS, JavaScript(vanilla), Node.js(to use serverless function on Netlify)
 
 ## Optimizations
 
