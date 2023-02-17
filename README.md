@@ -25,6 +25,7 @@ When I improve this app, I would add a dictionary function that can compare/tran
 I learned **OOP** and **async/await, promise** while creating this app.  
 I built this app with OOP concept (especially encapsulation) to create an English version object and a Japanese one.  
 If there is some need to add movie items to this app, it would be easy to change the codes.
+I deployed this app into Netlify and learned how to use serverless function on Netlify.
 
 ## Future plan:
 
