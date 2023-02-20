@@ -8,30 +8,31 @@ In this app, you can compare the English version with the original (Japanese) on
 
 ## How It's Made:
 
-**Tech used:** HTML, CSS, JavaScript(vanilla), Node.js(to use serverless function on Netlify)
+**Tech used:** HTML, CSS, vanilla JavaScript, and Node.js (for implementing the serverless function on Netlify).
 
 ## Optimizations
 
-I suppose for those who are big fans of Ghibli movies and want to learn English or Japanese, this app may be a good option for learning a language.
+For those who are big fans of Ghibli movies and want to learn English or Japanese, this app could be a great tool for language learning.
   
-Like:  
-"spirit away" in English --> "神隠し" in Japanese  
-"princess" in English --> "姫" in Japanese  
+Example:  
+- "spirit away" in English --> "神隠し" (Kamikakushi) in Japanese  
+- "princess" in English --> "姫" (hime) in Japanese  
 
 When I improve this app, I would add a dictionary function that can compare/translate English with Japanese.
   
 ## Lessons Learned:
 
-I learned **OOP** and **async/await, promise** while creating this app.  
-I built this app with OOP concept (especially encapsulation) to create an English version object and a Japanese one.  
-If there is some need to add movie items to this app, it would be easy to change the codes.
-I deployed this app into Netlify and learned how to use serverless function on Netlify.
+1. While creating this app, I learned about Object-Oriented Programming (OOP) and asynchronous programming concepts such as async/await and promises.
 
-## Future plan:
+2. I developed this app using the OOP concept, with a focus on encapsulation to create separate English and Japanese versions of the object. In case there is a need to add new movie items to this app, the code can be easily modified.
 
-I'd like to deploy this app to Netlify.
-1. I need to hide my API key.
-2. I need to learn backend like Node.js  
-Once the right timing is coming, I'm sure to try it out!
-  
+3. After completing the development of this app, I deployed it on Netlify and gained experience in using serverless functions.
+
+
+## System Architecture:
+
+1. To maintain the security of my API key, I stored it on Netlify, making it hidden and secure.
+
+2. I used a serverless function on Netlify to retrieve the API key, ensuring a secure and seamless integration.  
+
 ![System_Diagram](https://user-images.githubusercontent.com/95740190/202063410-07ce9ca2-eec8-4625-acf3-7fb7d82548f4.png)
