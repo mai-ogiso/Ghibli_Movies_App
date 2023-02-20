@@ -35,4 +35,5 @@ When I improve this app, I would add a dictionary function that can compare/tran
 
 2. I used a serverless function on Netlify to retrieve the API key, ensuring a secure and seamless integration.  
 
-![System_Diagram](https://user-images.githubusercontent.com/95740190/202063410-07ce9ca2-eec8-4625-acf3-7fb7d82548f4.png)
+
+![system_diagram drawio](https://user-images.githubusercontent.com/95740190/220192655-8e03f757-b133-4777-b1cf-0b016c06edb9.svg)
